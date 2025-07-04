@@ -1,17 +1,12 @@
 #include "TCPServer.h"
 
 TCPServer::TCPServer(boost::asio::io_context& _io) : 
-	io(_io), socket(_io), acceptor(_io, tcp::endpoint(tcp::v4(), 7777)), inactivityTimeoutTimer(_io), broadcastTimer(_io) /**/ {
+	io(_io), socket(_io), acceptor(_io, tcp::endpoint(tcp::v4(), 7777)), inactivityTimeoutTimer(_io), broadcastTimer(_io) {
 
 	inactivityTimeoutTimer.expires_from_now(boost::posix_time::seconds(20));
 	inactivityTimeoutTimer.async_wait(std::bind(&TCPServer::inactivityTimeout, this, boost::asio::placeholders::error));
-	/*
-	*/
 
 	seekClient();
-	/*TCPServer::safeTimer timer = TCPServer::getTimer(io);
-	timer->expires_after(std::chrono::milliseconds(100));
-	timer->async_wait(std::bind(&TCPServer::broadcastString, this, timer, boost::asio::placeholders::error));*/
 
 	broadcastTimer.expires_at(std::chrono::steady_clock::now() + std::chrono::seconds(3));
 	broadcastTimer.async_wait(std::bind(&TCPServer::broadcastString, this, boost::asio::placeholders::error));
@@ -94,9 +89,6 @@ void TCPServer::broadcastString(boost::system::error_code err) {
 		stack.pop_back();
 	}
 
-	/*TCPServer::safeTimer timer = TCPServer::getTimer(io);
-	timer->expires_after(std::chrono::seconds(5));
-	timer->async_wait(std::bind(&TCPServer::broadcastString, this, timer, boost::asio::placeholders::error));*/
 	broadcastTimer.expires_at(std::chrono::steady_clock::now() + std::chrono::seconds(3));
 	broadcastTimer.async_wait(std::bind(&TCPServer::broadcastString, this, boost::asio::placeholders::error));
 }
@@ -104,11 +96,6 @@ void TCPServer::broadcastString(boost::system::error_code err) {
 void TCPServer::recieveString() {
 	//TO BE IMPLEMENTED
 }
-
-TCPServer::safeTimer TCPServer::getTimer(boost::asio::io_context& io) {
-	return TCPServer::safeTimer(new boost::asio::steady_timer(io));
-}
-
 
 
 
