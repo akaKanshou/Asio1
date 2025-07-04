@@ -27,9 +27,6 @@ public:
 };
 
 class TCPServer {
-public:
-	typedef std::shared_ptr<boost::asio::steady_timer> safeTimer;
-
 private:
 	boost::asio::io_context& io;
 	tcp::socket socket;
@@ -53,8 +50,6 @@ public:
 	~TCPServer();
 
 	tcp::socket& getSocket();
-
-	static TCPServer::safeTimer getTimer(boost::asio::io_context& io);
 };
 
 
